@@ -1,0 +1,18 @@
+# User Stories
+
+> Master user stories, grouped by feature. **Additive-only** — see `constitution/conventions.md`. Never edit or delete an existing `##` feature section or story from here; only append (via `scripts/merge_master_doc.py`). A feature's own stories live at `features/<slug>/user-stories.md` until merged.
+
+Each feature is its own `##` section:
+
+```
+## <feature-slug>
+
+- As a <role>, I want to <action>, so that <benefit>.
+  **Acceptance criteria:**
+  - [ ] <criterion>
+  - [ ] <criterion>
+```
+
+- Acceptance criteria here are the same ones `/rsw:plan` turns into task-level acceptance criteria in `implementation-plan.md`, and that `/rsw:review` checks off in `review.md` — keep the wording consistent across all three so a reviewer (human or Codex) can trace a criterion back to the story that motivated it.
+
+<!-- Feature sections below this line. -->

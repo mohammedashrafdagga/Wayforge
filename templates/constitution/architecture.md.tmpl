@@ -1,0 +1,82 @@
+# Architecture Constitution
+
+> This document is authoritative. Every new feature's implementation plan must be checked against it before code is written. Contradictions or trade-offs surface as questions to the user during `/rsw:plan` — they are never silently resolved by picking a side.
+
+- **Project:** {{PROJECT_NAME}}
+- **Scope:** {{SCOPE}} <!-- whole project | backend only | frontend only -->
+- **Initialized:** {{INIT_DATE}}
+- **Git strategy:** {{GIT_STRATEGY}} <!-- mono-repo single branch | split backend/frontend branches | per-feature branches -->
+
+## Stack
+
+| Layer | Choice | Notes |
+|---|---|---|
+| Backend | {{BACKEND_FRAMEWORK}} | default: FastAPI |
+| Frontend | {{FRONTEND_FRAMEWORK}} | default: React + Vite |
+| Architecture style | {{ARCHITECTURE_STYLE}} | default: DDD, feature-based folders |
+| Database | {{DATABASE}} | fill in during init/adopt |
+| Package/dependency manager | {{PACKAGE_MANAGER}} | e.g. uv/poetry (backend), npm/pnpm (frontend) |
+
+If any row above diverges from the defaults, the divergence is intentional and every later feature plan must respect it — do not silently drift back to the default.
+
+## Backend conventions (default stack: FastAPI + DDD)
+
+**Folder layout is feature-based, not layer-based.** Do not create a project-wide `models/`, `services/`, `routers/` split. Instead, each business capability owns a vertical slice:
+
+```
+backend/
+├── src/
+│   ├── <feature>/                  # e.g. users, billing, saved_searches
+│   │   ├── domain/                 # entities, value objects, domain services — no framework imports
+│   │   │   ├── entities.py
+│   │   │   └── exceptions.py
+│   │   ├── application/            # use cases / application services — orchestrate domain + ports
+│   │   │   └── services.py
+│   │   ├── infrastructure/         # repositories, ORM models, external clients — implements ports
+│   │   │   ├── models.py           # SQLAlchemy/ORM models
+│   │   │   └── repository.py
+│   │   └── api/                    # FastAPI router + request/response schemas for this feature
+│   │       ├── router.py
+│   │       └── schemas.py
+│   ├── shared/                     # cross-feature kernel: base entity, base repository, DB session, auth
+│   └── main.py                     # app factory, mounts each feature's router
+├── tests/
+│   └── <feature>/
+└── alembic/ (or equivalent migrations tool)
+```
+
+**Dependency direction (hard rule):** `api` → `application` → `domain`. `infrastructure` implements interfaces defined in `domain`/`application` and is wired in at the composition root (`main.py` or a DI container) — `domain` never imports from `infrastructure` or `api`. A domain entity has no FastAPI, SQLAlchemy, or Pydantic imports.
+
+- **Async by default:** all route handlers, repository methods, and DB calls are `async def`, using an async DB driver.
+- **Auth:** JWT-based; auth concerns live in `shared/`, not duplicated per feature.
+- **Cross-feature calls** go through the other feature's `application` layer (its use-case functions/classes), never by reaching into another feature's `infrastructure` or ORM models directly. If two features need to share a concept, it belongs in `shared/`.
+- **Schemas vs entities:** `api/schemas.py` (Pydantic) is the wire format; `domain/entities.py` is the business object. Do not use one as a stand-in for the other — map between them explicitly at the `api` boundary.
+
+## Frontend conventions (default stack: React + Vite)
+
+```
+frontend/
+├── src/
+│   ├── features/
+│   │   └── <feature>/
+│   │       ├── components/
+│   │       ├── hooks/
+│   │       ├── api.ts              # calls to this feature's backend endpoints
+│   │       └── types.ts
+│   ├── shared/                     # cross-feature UI kit, auth context, api client base
+│   └── app/                        # routing, top-level layout, providers
+```
+
+- Feature folders mirror the backend's feature slices where practical, so a change to `saved_searches` touches `backend/src/saved_searches/` and `frontend/src/features/saved_searches/` — not scattered layer-wide files.
+- Shared UI primitives (buttons, inputs, layout) live in `shared/`; feature-specific composition lives in the feature folder.
+
+## What every feature must respect
+
+1. New entities/endpoints/routes are added inside the owning feature's slice — never bolted onto an unrelated feature's folder for convenience.
+2. A feature's `domain` layer stays framework-free. If a plan step requires importing FastAPI or SQLAlchemy into `domain/`, that's a constitution violation — flag it as a question during `/rsw:plan`, don't just do it.
+3. Master docs (`workflow/data-model.md`, `workflow/api-registry.md`, `workflow/user-stories.md`) are additive-only. See `workflow/constitution/conventions.md` for the full rule.
+4. Anything in this file that a feature's plan needs to contradict (e.g. "this one endpoint needs to be sync, not async, because of library X") must be surfaced to the user as an explicit question during `/rsw:plan`, and if approved, noted in that feature's `implementation-plan.md` as a deliberate, scoped exception — not a silent rewrite of this file.
+
+## Amending this file
+
+This file changes only when the user deliberately changes a project-wide architectural decision (e.g. switching frameworks, changing the git strategy). A single feature's implementation plan should not edit this file — it should conform to it, or flag a conflict for the user to resolve, who then updates this file explicitly if the decision is to change course.

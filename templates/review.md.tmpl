@@ -1,0 +1,45 @@
+# Review — {{FEATURE_SLUG}}
+
+> Written by `/rsw:review`. Checks the resulting code against `implementation-plan.md`'s tasks and acceptance criteria. Intended to be run from Codex in v1, but works the same from Claude Code.
+
+- **Feature:** {{FEATURE_SLUG}}
+- **Branch:** {{BRANCH_NAME}}
+- **Reviewed:** {{DATE}}
+- **Diff reviewed:** {{DIFF_REF}} <!-- e.g. branch vs. base, or a commit range -->
+
+## Result
+
+**{{OVERALL_RESULT}}** <!-- PASS | FAIL | PASS WITH NOTES -->
+
+## Task-by-task
+
+### Task 1: <title from implementation-plan.md>
+
+- [ ] / [x] <criterion> — <PASS/FAIL + one-line evidence, e.g. "confirmed in backend/src/saved_searches/api/router.py:42">
+- [ ] / [x] <criterion> — ...
+
+<!-- repeat per task -->
+
+## Constitution conformance
+
+<Explicitly confirm the code respects workflow/constitution/architecture.md — dependency direction, feature-folder placement, async conventions, etc. Call out any violation even if the acceptance criteria above all passed; a feature can satisfy its own criteria while still violating the constitution.>
+
+- [ ] Feature code lives inside its own slice (`backend/src/{{FEATURE_SLUG}}/`, `frontend/src/features/{{FEATURE_SLUG}}/`)
+- [ ] `domain/` layer has no framework imports
+- [ ] Dependency direction respected (`api` → `application` → `domain`)
+- [ ] No unflagged cross-feature reach into another feature's `infrastructure`/ORM models
+
+## Issues found
+
+<Any FAIL above gets a corresponding entry here with enough detail for /rsw:apply to fix it in a follow-up pass.>
+
+1. <issue>
+
+## Merge status
+
+<Filled in after this review passes and merge_master_doc.py / validate_docs.py run against workflow/data-model.md, workflow/api-registry.md, workflow/user-stories.md.>
+
+- [ ] `validate_docs.py` run — no unresolved conflicts
+- [ ] `merge_master_doc.py` run for data-model.md
+- [ ] `merge_master_doc.py` run for api-registry.md
+- [ ] `merge_master_doc.py` run for user-stories.md

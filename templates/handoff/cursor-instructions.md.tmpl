@@ -1,0 +1,19 @@
+# Cursor: apply the {{FEATURE_SLUG}} implementation plan
+
+You are picking this up cold, with no memory of the Claude Code session that produced it. This file is self-contained — everything needed is either here or in the two files it points to.
+
+## What to do
+
+1. Read `{{PLAN_PATH}}` in full. It contains the task breakdown, acceptance criteria, and the trade-off decisions already made — do not re-litigate them.
+2. Read `{{ARCHITECTURE_PATH}}` and `{{CONVENTIONS_PATH}}` before writing any code. The plan assumes this project's constitution; violating it (wrong folder layout, wrong dependency direction, sync where async is required) is a defect even if the acceptance criteria technically pass.
+3. Work through the plan's tasks in order. Each task lists its files and acceptance criteria — implement to those criteria, not beyond them.
+4. Branch: `{{BRANCH_NAME}}` (already created — check it out if not already on it).
+5. Do not edit `workflow/data-model.md`, `workflow/api-registry.md`, or `workflow/user-stories.md` directly — those are master docs that only change via the RSW merge step at the end of `/rsw:review`, run from Claude Code or Codex.
+6. When all tasks are complete, stop and report back to the user rather than proceeding to review yourself — `/rsw:review` is a separate step, run from Codex or Claude Code.
+
+## Files referenced
+
+- Plan: `{{PLAN_PATH}}`
+- Architecture constitution: `{{ARCHITECTURE_PATH}}`
+- Conventions: `{{CONVENTIONS_PATH}}`
+- This feature's data model additions: `{{DATA_MODEL_PATH}}`

@@ -1,0 +1,18 @@
+{
+  "name": "rsw",
+  "version": "0.1.0",
+  "description": "RealSoft Workflow — a spec-driven, multi-agent development workflow. Turns \"build a feature\" into scope → plan → implement → review, backed by living docs (architecture constitution, data model, API registry, user stories) that every feature must read before touching code and update after. Targets Claude Code, Cursor, and Codex.",
+  "author": {
+    "name": "Mohammed Abudaqqa"
+  },
+  "keywords": [
+    "workflow",
+    "spec-driven",
+    "multi-agent",
+    "ddd",
+    "fastapi",
+    "react",
+    "planning",
+    "living-docs"
+  ]
+}

@@ -1,0 +1,58 @@
+# Implementation Plan — {{FEATURE_SLUG}}
+
+> Written by `/rsw:plan`. Read alongside `workflow/constitution/architecture.md`, `workflow/constitution/conventions.md`, and this feature's own `user-stories.md` / `data-model.md`. Executed by `/rsw:apply` (Claude Code or Cursor) and checked by `/rsw:review` (Claude Code or Codex).
+
+- **Feature:** {{FEATURE_SLUG}}
+- **Branch:** {{BRANCH_NAME}} <!-- per the git strategy in constitution/conventions.md -->
+- **Created:** {{DATE}}
+
+## Summary
+
+<1-3 sentences: what this feature does and why, restated from user-stories.md>
+
+## Trade-offs and conflicts surfaced to the user
+
+<Every place this plan touches something ambiguous relative to the constitution or an existing pattern must be listed here with the question asked and the user's answer — even if the answer was "use the default." An empty section here is a red flag that the codebase wasn't actually checked; don't leave it empty by default, only because there was genuinely nothing to ask.>
+
+- **Question:** <e.g. "Should saved searches be per-user or shared across a team? No existing pattern covers this.">
+  **Answer:** <user's answer>
+  **Impact on plan:** <what this changed below>
+
+## Existing patterns consulted
+
+<Concrete files/modules in the codebase that this plan follows or deliberately deviates from — this is what makes the plan grounded rather than generic. List paths, not vague references.>
+
+- `path/to/similar/feature/` — followed for X
+- `path/to/other/module.py` — deviated from because Y (see trade-offs above)
+
+## Tasks
+
+Each task is independently completable and checkable. `/rsw:apply` works through these in order; `/rsw:review` checks each against its acceptance criteria.
+
+### Task 1: <short title>
+
+- **Files:** <files created/modified>
+- **Description:** <what to build, concretely — enough that a cold-start agent with no other context could execute it>
+- **Acceptance criteria:**
+  - [ ] <criterion, traceable back to a user-stories.md acceptance criterion where applicable>
+  - [ ] <criterion>
+
+### Task 2: <short title>
+
+- **Files:** ...
+- **Description:** ...
+- **Acceptance criteria:**
+  - [ ] ...
+
+<!-- add tasks as needed -->
+
+## Data model / API additions in this plan
+
+<Restate, for convenience, the entities/endpoints this feature adds — the authoritative source is features/{{FEATURE_SLUG}}/data-model.md, this is just a pointer.>
+
+- See `workflow/features/{{FEATURE_SLUG}}/data-model.md`
+- New endpoints: <list, or "none">
+
+## Out of scope
+
+<Explicitly note anything adjacent that this plan deliberately does not cover, so /rsw:review doesn't flag it as missing.>

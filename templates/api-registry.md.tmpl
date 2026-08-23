@@ -1,0 +1,19 @@
+# API Registry
+
+> Master API endpoint list, grouped by feature. **Additive-only** — see `constitution/conventions.md`. Never edit or delete an existing `##` feature section or an existing endpoint row from here; only append (via `scripts/merge_master_doc.py`). A feature's own endpoints are drafted in `features/<slug>/api-registry.md` by `/rsw:plan` (once routes are actually decided) and merged in here by `/rsw:review`. A feature that adds no endpoints simply has no `features/<slug>/api-registry.md` file.
+
+Each feature is its own `##` section, containing a table of its endpoints:
+
+```
+## <feature-slug>
+
+| Method | Path | Summary | Auth |
+|---|---|---|---|
+| POST | /api/v1/<feature>/ | Create a <thing> | required |
+| GET | /api/v1/<feature>/{id} | Fetch a <thing> | required |
+```
+
+- One row per endpoint. If a feature adds an endpoint to an *existing* feature's area (e.g. `saved-searches` adds an endpoint that conceptually belongs under `search`), still record it under the feature section that owns the code that implements it — cross-reference in prose if useful, don't duplicate the row under two sections.
+- Path conflicts (two features registering the same method+path) are exactly what `scripts/validate_docs.py` checks for before merge — treat any hit as a hard stop for the user, not something to silently rename around.
+
+<!-- Feature sections below this line. -->
