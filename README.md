@@ -104,7 +104,3 @@ realsoft-workflow/
 `templates/`, `scripts/`, and `skills/` are bundled into the wheel via `pyproject.toml`'s `force-include` rules, so `rsw init` works from an installed CLI with no need for this source repo to be present.
 
 A project initialized with RSW ends up with its own `workflow/` (living docs) and `.rsw/` (the templates/scripts bundle, copied in at init time) — this repo is the CLI that generates and manages those, not the trees themselves.
-
-## Status
-
-v1. Not yet done: Phase 6 dogfooding (build a real feature end-to-end through the full loop) and Phase 7 adoption testing against a real brownfield repo, per the original build plan's phased order.
