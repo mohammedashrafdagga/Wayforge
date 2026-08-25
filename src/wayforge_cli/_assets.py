@@ -1,12 +1,12 @@
-"""Locate RSW's bundled docs-template / script / skill payload (the "core pack").
+"""Locate Wayforge's bundled docs-template / script / skill payload (the "core pack").
 
-When installed from a built wheel (`uv tool install rsw-cli`, or
-`uv tool install rsw-cli --from git+...`), hatchling's force-include rules
+When installed from a built wheel (`uv tool install wayforge-cli`, or
+`uv tool install wayforge-cli --from git+...`), hatchling's force-include rules
 copy the repo's top-level `templates/`, `scripts/`, and `skills/` directories
-into `rsw_cli/core_pack/` inside the wheel — see `pyproject.toml`. At runtime
+into `wayforge_cli/core_pack/` inside the wheel — see `pyproject.toml`. At runtime
 that lands as a sibling directory of this file.
 
-When running from an unbuilt source checkout (`python -m rsw_cli`, or an
+When running from an unbuilt source checkout (`python -m wayforge_cli`, or an
 editable install), no wheel-build step ran, so `core_pack/` won't exist next
 to this file. Fall back to walking up from this file to find the repo root
 (identified by a sibling `pyproject.toml`) and use its top-level
@@ -39,7 +39,7 @@ def templates_dir() -> Path:
     root = _dev_repo_root()
     if root is not None:
         return root / "templates"
-    raise RuntimeError("could not locate RSW's bundled templates/ directory")
+    raise RuntimeError("could not locate Wayforge's bundled templates/ directory")
 
 
 def scripts_dir() -> Path:
@@ -49,7 +49,7 @@ def scripts_dir() -> Path:
     root = _dev_repo_root()
     if root is not None:
         return root / "scripts"
-    raise RuntimeError("could not locate RSW's bundled scripts/ directory")
+    raise RuntimeError("could not locate Wayforge's bundled scripts/ directory")
 
 
 def skills_dir() -> Path:
@@ -59,4 +59,4 @@ def skills_dir() -> Path:
     root = _dev_repo_root()
     if root is not None:
         return root / "skills"
-    raise RuntimeError("could not locate RSW's bundled skills/ directory")
+    raise RuntimeError("could not locate Wayforge's bundled skills/ directory")

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# scaffold_project.sh — RealSoft Workflow greenfield scaffolding.
+# scaffold_project.sh — Wayforge greenfield scaffolding.
 #
 # Usage:
 #   scaffold_project.sh --root <path> --scope backend|frontend|both \
 #       [--backend-framework fastapi] [--frontend-framework react-vite] [--project-name <name>]
 #
 # Only understands the default stack (FastAPI / React+Vite). If the user picked a
-# non-default framework at /rsw:init, the skill handles that override itself and
+# non-default framework at `wayforge init`, the skill handles that override itself and
 # should not call this script for the overridden side — it scaffolds the default
 # side only and leaves the rest to the calling skill's own instructions.
 #
@@ -65,7 +65,7 @@ scaffold_backend() {
   cat > src/main.py <<'PYEOF'
 from fastapi import FastAPI
 
-app = FastAPI(title="RealSoft Workflow app")
+app = FastAPI(title="Wayforge app")
 
 
 @app.get("/health")

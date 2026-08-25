@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""validate_docs.py — pre-merge conflict guard for RealSoft Workflow master docs.
+"""validate_docs.py — pre-merge conflict guard for Wayforge master docs.
 
-Runs before scripts/merge_master_doc.py in /rsw:review. Flags things a mechanical
+Runs before scripts/merge_master_doc.py in /wayforge-review. Flags things a mechanical
 append can't safely judge on its own: the same entity name showing up with
 different fields, two Mermaid blocks that define the same entity differently, or
 two features registering the same HTTP method+path. Any hit here is a hard stop —

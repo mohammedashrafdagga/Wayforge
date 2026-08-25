@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """merge_master_doc.py — additive-only merge of a feature-local doc into a master doc.
 
-RealSoft Workflow's master docs (workflow/data-model.md, workflow/api-registry.md,
+Wayforge's master docs (workflow/data-model.md, workflow/api-registry.md,
 workflow/user-stories.md) are additive-only: a feature may append new content, never
 rewrite or delete an existing entry. This script performs the mechanical append.
 
