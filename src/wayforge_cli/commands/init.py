@@ -1,4 +1,4 @@
-"""`rsw init` — bootstrap a project with RSW's living docs and agent skills."""
+"""`wayforge init` — bootstrap a project with Wayforge's living docs and agent skills."""
 from __future__ import annotations
 
 import shutil
@@ -74,17 +74,17 @@ def init_command(
         None, "--git-strategy", help="mono | split | per-feature"
     ),
     ai: str = typer.Option(
-        "claude,cursor,codex", "--ai", help="Comma-separated agents to install /rsw-* skills for: claude,cursor,codex."
+        "claude,cursor,codex", "--ai", help="Comma-separated agents to install /wayforge-* skills for: claude,cursor,codex."
     ),
     brownfield: bool = typer.Option(
         False, "--brownfield/--greenfield",
-        help="Brownfield: skip app scaffolding, leave the constitution's stack fields for /rsw-adopt to fill in.",
+        help="Brownfield: skip app scaffolding, leave the constitution's stack fields for /wayforge-adopt to fill in.",
     ),
     project_name: Optional[str] = typer.Option(None, "--project-name"),
     yes: bool = typer.Option(False, "--yes", "-y", help="Accept defaults/flags without interactive prompts."),
     force: bool = typer.Option(False, "--force", help="Overwrite an existing workflow/ tree at the target location."),
 ) -> None:
-    """Bootstrap a project with RSW's workflow/ living docs and /rsw-* agent skills."""
+    """Bootstrap a project with Wayforge's workflow/ living docs and /wayforge-* agent skills."""
     project_path = Path(project_dir).resolve()
     project_path.mkdir(parents=True, exist_ok=True)
     name = project_name or project_path.name
@@ -117,7 +117,7 @@ def init_command(
 
     if workflow_dir.exists() and not force:
         console.print(
-            f"[red]{workflow_dir} already exists.[/red] Use --force to overwrite, or run `/rsw-adopt` "
+            f"[red]{workflow_dir} already exists.[/red] Use --force to overwrite, or run `/wayforge-adopt` "
             "inside an already-installed agent to add to it additively instead of re-initializing."
         )
         raise typer.Exit(1)
@@ -145,7 +145,7 @@ def init_command(
             console.print("[red]Scaffolding failed — see output above. Fix the issue and re-run, or pass --brownfield to skip scaffolding.[/red]")
             raise typer.Exit(result.returncode)
     else:
-        console.print("[yellow]--brownfield set: skipping app scaffolding. Run `/rsw-adopt` inside your coding agent after this to infer the stack/data-model/API registry from the existing code.[/yellow]")
+        console.print("[yellow]--brownfield set: skipping app scaffolding. Run `/wayforge-adopt` inside your coding agent after this to infer the stack/data-model/API registry from the existing code.[/yellow]")
 
     # --- 1b. Write a .gitignore covering what scaffolding/tooling produces ---
     gitignore_path = project_path / ".gitignore"
@@ -167,11 +167,11 @@ def init_command(
 
     if brownfield:
         stack_subs = {
-            "BACKEND_FRAMEWORK": "TBD — run /rsw-adopt to infer from the existing codebase",
-            "FRONTEND_FRAMEWORK": "TBD — run /rsw-adopt to infer from the existing codebase",
-            "ARCHITECTURE_STYLE": "TBD — run /rsw-adopt to infer from the existing codebase",
-            "DATABASE": "TBD — run /rsw-adopt to infer from the existing codebase",
-            "PACKAGE_MANAGER": "TBD — run /rsw-adopt to infer from the existing codebase",
+            "BACKEND_FRAMEWORK": "TBD — run /wayforge-adopt to infer from the existing codebase",
+            "FRONTEND_FRAMEWORK": "TBD — run /wayforge-adopt to infer from the existing codebase",
+            "ARCHITECTURE_STYLE": "TBD — run /wayforge-adopt to infer from the existing codebase",
+            "DATABASE": "TBD — run /wayforge-adopt to infer from the existing codebase",
+            "PACKAGE_MANAGER": "TBD — run /wayforge-adopt to infer from the existing codebase",
         }
     else:
         stack_subs = {
@@ -201,29 +201,29 @@ def init_command(
     for doc in ("data-model.md", "api-registry.md", "user-stories.md"):
         (workflow_dir / doc).write_text((templates_src / f"{doc}.tmpl").read_text())
 
-    # --- 3. Copy the .rsw/ tooling bundle (templates + scripts) into the project ---
-    rsw_dir = workflow_root / ".rsw"
-    _copy_tree(templates_src, rsw_dir / "templates")
-    _copy_tree(scripts_src, rsw_dir / "scripts")
-    _make_executable(rsw_dir / "scripts")
+    # --- 3. Copy the .wayforge/ tooling bundle (templates + scripts) into the project ---
+    wayforge_dir = workflow_root / ".wayforge"
+    _copy_tree(templates_src, wayforge_dir / "templates")
+    _copy_tree(scripts_src, wayforge_dir / "scripts")
+    _make_executable(wayforge_dir / "scripts")
 
-    # --- 4. Install /rsw-* skills for each selected agent ---
+    # --- 4. Install /wayforge-* skills for each selected agent ---
     installed: dict[str, list[str]] = {}
     for agent in agents:
         agent_base = workflow_root / AGENT_SKILL_DIRS[agent]
         installed[agent] = []
         for skill in SKILL_NAMES:
             content = (skills_src / f"{skill}.md").read_text()
-            skill_dir = agent_base / f"rsw-{skill}"
+            skill_dir = agent_base / f"wayforge-{skill}"
             skill_dir.mkdir(parents=True, exist_ok=True)
             (skill_dir / "SKILL.md").write_text(content)
-            installed[agent].append(f"rsw-{skill}")
+            installed[agent].append(f"wayforge-{skill}")
 
     # --- 5. Report ---
     console.print()
-    console.print(Panel.fit(f"[bold green]RSW initialized[/bold green] at {workflow_root}", title="rsw init"))
+    console.print(Panel.fit(f"[bold green]Wayforge initialized[/bold green] at {workflow_root}", title="wayforge init"))
     console.print(f"  workflow docs: [cyan]{workflow_dir}[/cyan]")
-    console.print(f"  tooling bundle: [cyan]{rsw_dir}[/cyan]")
+    console.print(f"  tooling bundle: [cyan]{wayforge_dir}[/cyan]")
     for agent, skills in installed.items():
         skill_list = ", ".join(f"/{s}" for s in skills)
         console.print(f"  {agent}: [cyan]{workflow_root / AGENT_SKILL_DIRS[agent]}[/cyan] → {skill_list}")
@@ -232,6 +232,6 @@ def init_command(
     console.print("Next steps:")
     console.print(f"  cd {workflow_root}")
     if brownfield:
-        console.print("  launch your coding agent, then run [bold]/rsw-adopt[/bold]")
+        console.print("  launch your coding agent, then run [bold]/wayforge-adopt[/bold]")
     else:
-        console.print('  launch your coding agent, then run [bold]/rsw-new-feature "<describe your first feature>"[/bold]')
+        console.print('  launch your coding agent, then run [bold]/wayforge-new-feature "<describe your first feature>"[/bold]')

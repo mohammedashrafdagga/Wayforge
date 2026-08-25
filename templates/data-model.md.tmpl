@@ -1,6 +1,6 @@
 # Data Model
 
-> Master data model. **Additive-only** — see `constitution/conventions.md`. Never edit or delete an existing `##` entity section from here; only append new ones (via `.rsw/scripts/merge_master_doc.py` at the end of `/rsw-review`). A feature's own draft lives at `features/<slug>/data-model.md` until it's merged in.
+> Master data model. **Additive-only** — see `constitution/conventions.md`. Never edit or delete an existing `##` entity section from here; only append new ones (via `.wayforge/scripts/merge_master_doc.py` at the end of `/wayforge-review`). A feature's own draft lives at `features/<slug>/data-model.md` until it's merged in.
 
 Each entity is its own `##` section so the merge script can parse section boundaries. Keep this exact shape per entity:
 
@@ -26,4 +26,4 @@ erDiagram
 - The Mermaid block is one atomic unit at merge time — never partially merged.
 - If a new entity looks like it should relate to an existing one, include both sides of the relationship in the *new* entity's diagram block (e.g. `EXISTING ||--o{ NEW : "..."`) rather than editing the existing entity's section.
 
-<!-- Entities below this line. First entry added by `rsw init` or /rsw-adopt if the project already has a data model; otherwise this file starts empty and fills in as features are merged. -->
+<!-- Entities below this line. First entry added by `wayforge init` or /wayforge-adopt if the project already has a data model; otherwise this file starts empty and fills in as features are merged. -->

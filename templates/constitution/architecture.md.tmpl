@@ -1,6 +1,6 @@
 # Architecture Constitution
 
-> This document is authoritative. Every new feature's implementation plan must be checked against it before code is written. Contradictions or trade-offs surface as questions to the user during `/rsw-plan` — they are never silently resolved by picking a side.
+> This document is authoritative. Every new feature's implementation plan must be checked against it before code is written. Contradictions or trade-offs surface as questions to the user during `/wayforge-plan` — they are never silently resolved by picking a side.
 
 - **Project:** {{PROJECT_NAME}}
 - **Scope:** {{SCOPE}} <!-- whole project | backend only | frontend only -->
@@ -73,9 +73,9 @@ frontend/
 ## What every feature must respect
 
 1. New entities/endpoints/routes are added inside the owning feature's slice — never bolted onto an unrelated feature's folder for convenience.
-2. A feature's `domain` layer stays framework-free. If a plan step requires importing FastAPI or SQLAlchemy into `domain/`, that's a constitution violation — flag it as a question during `/rsw-plan`, don't just do it.
+2. A feature's `domain` layer stays framework-free. If a plan step requires importing FastAPI or SQLAlchemy into `domain/`, that's a constitution violation — flag it as a question during `/wayforge-plan`, don't just do it.
 3. Master docs (`workflow/data-model.md`, `workflow/api-registry.md`, `workflow/user-stories.md`) are additive-only. See `workflow/constitution/conventions.md` for the full rule.
-4. Anything in this file that a feature's plan needs to contradict (e.g. "this one endpoint needs to be sync, not async, because of library X") must be surfaced to the user as an explicit question during `/rsw-plan`, and if approved, noted in that feature's `implementation-plan.md` as a deliberate, scoped exception — not a silent rewrite of this file.
+4. Anything in this file that a feature's plan needs to contradict (e.g. "this one endpoint needs to be sync, not async, because of library X") must be surfaced to the user as an explicit question during `/wayforge-plan`, and if approved, noted in that feature's `implementation-plan.md` as a deliberate, scoped exception — not a silent rewrite of this file.
 
 ## Amending this file
 

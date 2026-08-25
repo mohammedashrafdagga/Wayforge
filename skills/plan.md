@@ -1,19 +1,19 @@
 ---
-name: rsw-plan
-description: This skill should be used when the user asks to "plan this feature", "create an implementation plan", "run /rsw-plan", or wants a task breakdown for a feature that already has user-stories.md and data-model.md from /rsw-new-feature. Produces implementation-plan.md, surfaces trade-offs against the constitution and existing code patterns as explicit questions, and creates the feature branch per the project's git strategy.
+name: wayforge-plan
+description: This skill should be used when the user asks to "plan this feature", "create an implementation plan", "run /wayforge-plan", or wants a task breakdown for a feature that already has user-stories.md and data-model.md from /wayforge-new-feature. Produces implementation-plan.md, surfaces trade-offs against the constitution and existing code patterns as explicit questions, and creates the feature branch per the project's git strategy.
 ---
 
-# /rsw-plan — Turn a scoped feature into an implementation plan
+# /wayforge-plan — Turn a scoped feature into an implementation plan
 
 Reads a feature's own docs, the constitution, and a real slice of the existing codebase, then produces `workflow/features/<slug>/implementation-plan.md`: a task breakdown with acceptance criteria, grounded in actual patterns already in the repo — not a generic plan. Creates the feature branch per the project's git strategy.
 
 ## Step 1 — Read the full context
 
-- `workflow/features/<slug>/user-stories.md` and `data-model.md` (from `/rsw-new-feature`)
+- `workflow/features/<slug>/user-stories.md` and `data-model.md` (from `/wayforge-new-feature`)
 - `workflow/constitution/architecture.md` and `conventions.md`
 - `workflow/api-registry.md` (to know what already exists and avoid re-planning it)
 
-If the feature folder doesn't exist yet, stop and point the user at `/rsw-new-feature` first.
+If the feature folder doesn't exist yet, stop and point the user at `/wayforge-new-feature` first.
 
 ## Step 2 — Grep the codebase for comparable patterns (do not skip)
 
@@ -27,7 +27,7 @@ Record every question asked and its answer in the plan's "Trade-offs and conflic
 
 ## Step 4 — Write `implementation-plan.md`
 
-Follow `.rsw/templates/implementation-plan.md.tmpl`. Break the feature into independently completable tasks, each with:
+Follow `.wayforge/templates/implementation-plan.md.tmpl`. Break the feature into independently completable tasks, each with:
 - files to be created/modified
 - a description concrete enough that a cold-start agent with zero conversation history (i.e. Cursor or Codex, opening only this file) could execute it correctly
 - acceptance criteria, traceable back to the acceptance criteria in `user-stories.md` where applicable
@@ -36,7 +36,7 @@ List any new data-model entities/endpoints this plan introduces as a pointer to 
 
 ## Step 4b — Write `workflow/features/<slug>/api-registry.md`
 
-If this feature adds or changes any HTTP endpoint, write `workflow/features/<slug>/api-registry.md` following `.rsw/templates/api-registry.md.tmpl`'s per-feature section shape (a single `## <feature-slug>` heading with a Method/Path/Summary/Auth table). This is the point in the lifecycle where concrete routes are actually decided, so it belongs here, not in `/rsw-new-feature`. `/rsw-review` merges this file into the master `workflow/api-registry.md` — if it's never created, review has nothing to merge and treats the feature as adding no new endpoints. Skip this file entirely (don't create an empty one) for a feature that genuinely adds no endpoints.
+If this feature adds or changes any HTTP endpoint, write `workflow/features/<slug>/api-registry.md` following `.wayforge/templates/api-registry.md.tmpl`'s per-feature section shape (a single `## <feature-slug>` heading with a Method/Path/Summary/Auth table). This is the point in the lifecycle where concrete routes are actually decided, so it belongs here, not in `/wayforge-new-feature`. `/wayforge-review` merges this file into the master `workflow/api-registry.md` — if it's never created, review has nothing to merge and treats the feature as adding no new endpoints. Skip this file entirely (don't create an empty one) for a feature that genuinely adds no endpoints.
 
 ## Step 5 — Create the feature branch
 
@@ -49,7 +49,7 @@ Use `git checkout -b <branch-name>` from the current default branch. If the work
 
 ## Step 6 — Report back
 
-Summarize the task list, the trade-off questions asked and answered, and the branch created (if any). Point the user at `/rsw-apply` as the next step — runnable from this same agent, or from a different one (Cursor/Codex) since `implementation-plan.md` is self-contained and every RSW-installed agent has the identical `/rsw-apply` skill available.
+Summarize the task list, the trade-off questions asked and answered, and the branch created (if any). Point the user at `/wayforge-apply` as the next step — runnable from this same agent, or from a different one (Cursor/Codex) since `implementation-plan.md` is self-contained and every Wayforge-installed agent has the identical `/wayforge-apply` skill available.
 
 ## Notes
 

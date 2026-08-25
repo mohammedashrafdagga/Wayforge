@@ -1,11 +1,11 @@
 ---
-name: rsw-review
-description: This skill should be used when the user asks to "review this feature", "check the implementation against the plan", "run /rsw-review", or wants to verify a completed feature's acceptance criteria before merging its docs into the master data-model/api-registry/user-stories. Identical skill installed for Claude Code, Cursor, and Codex — commonly run from a different agent than the one that applied the plan, for an independent check.
+name: wayforge-review
+description: This skill should be used when the user asks to "review this feature", "check the implementation against the plan", "run /wayforge-review", or wants to verify a completed feature's acceptance criteria before merging its docs into the master data-model/api-registry/user-stories. Identical skill installed for Claude Code, Cursor, and Codex — commonly run from a different agent than the one that applied the plan, for an independent check.
 ---
 
-# /rsw-review — Verify a feature and merge its docs into the masters
+# /wayforge-review — Verify a feature and merge its docs into the masters
 
-Checks a feature's actual implementation against `implementation-plan.md`'s tasks and acceptance criteria, writes `review.md`, and — only if the review passes — runs the additive-only merge of the feature's local docs into the three master docs. This is the only RSW skill that's allowed to change `workflow/data-model.md`, `workflow/api-registry.md`, and `workflow/user-stories.md`, and only via the scripts below, never by hand-editing them.
+Checks a feature's actual implementation against `implementation-plan.md`'s tasks and acceptance criteria, writes `review.md`, and — only if the review passes — runs the additive-only merge of the feature's local docs into the three master docs. This is the only Wayforge skill that's allowed to change `workflow/data-model.md`, `workflow/api-registry.md`, and `workflow/user-stories.md`, and only via the scripts below, never by hand-editing them.
 
 ## Step 1 — Read the plan and diff the implementation
 
@@ -27,7 +27,7 @@ A feature can pass every acceptance criterion and still violate the constitution
 
 ## Step 4 — Write `review.md`
 
-Follow `.rsw/templates/review.md.tmpl`. Set the overall result (PASS / FAIL / PASS WITH NOTES) and list every issue found with enough detail that a follow-up `/rsw-apply` pass could fix it without re-deriving what's wrong.
+Follow `.wayforge/templates/review.md.tmpl`. Set the overall result (PASS / FAIL / PASS WITH NOTES) and list every issue found with enough detail that a follow-up `/wayforge-apply` pass could fix it without re-deriving what's wrong.
 
 ## Step 5 — If PASS, run the additive-only merge
 
@@ -36,26 +36,26 @@ Only proceed past this point if the result is PASS or PASS WITH NOTES (issues th
 For each of the three master docs, first validate, then merge:
 
 ```bash
-python3 .rsw/scripts/validate_docs.py --kind data-model \
+python3 .wayforge/scripts/validate_docs.py --kind data-model \
   --source workflow/features/<slug>/data-model.md --master workflow/data-model.md
 
-python3 .rsw/scripts/merge_master_doc.py --mode entity \
+python3 .wayforge/scripts/merge_master_doc.py --mode entity \
   --source workflow/features/<slug>/data-model.md --master workflow/data-model.md
 ```
 
 ```bash
-python3 .rsw/scripts/validate_docs.py --kind api-registry \
+python3 .wayforge/scripts/validate_docs.py --kind api-registry \
   --source workflow/features/<slug>/api-registry.md --master workflow/api-registry.md
 
-python3 .rsw/scripts/merge_master_doc.py --mode group \
+python3 .wayforge/scripts/merge_master_doc.py --mode group \
   --source workflow/features/<slug>/api-registry.md --master workflow/api-registry.md
 ```
 
 ```bash
-python3 .rsw/scripts/validate_docs.py --kind user-stories \
+python3 .wayforge/scripts/validate_docs.py --kind user-stories \
   --source workflow/features/<slug>/user-stories.md --master workflow/user-stories.md
 
-python3 .rsw/scripts/merge_master_doc.py --mode group \
+python3 .wayforge/scripts/merge_master_doc.py --mode group \
   --source workflow/features/<slug>/user-stories.md --master workflow/user-stories.md
 ```
 
@@ -69,4 +69,4 @@ Update `review.md`'s "Merge status" checklist to reflect what actually ran.
 
 ## Step 6 — Report back
 
-Summarize the review result, key findings, and whether the master docs were merged. If merged, note what was added to each. If not merged (FAIL, or a validation conflict), state clearly what needs to happen before re-running `/rsw-review`.
+Summarize the review result, key findings, and whether the master docs were merged. If merged, note what was added to each. If not merged (FAIL, or a validation conflict), state clearly what needs to happen before re-running `/wayforge-review`.

@@ -7,32 +7,32 @@ Companion to `architecture.md`. Where that file describes structure and layering
 `workflow/data-model.md`, `workflow/api-registry.md`, and `workflow/user-stories.md` are **master documents**. A feature is only ever allowed to *append* new entries to them — never edit or delete an existing entry.
 
 - If a feature seems to require *changing* an existing entity, endpoint, or story, that is a signal to stop and ask the user: is this genuinely a breaking change to an existing capability (rare, needs explicit user sign-off and a manual edit), or does it actually describe a *new* capability that should be modeled as a new, additive entry instead?
-- `.rsw/scripts/merge_master_doc.py` enforces this mechanically at merge time (run at the end of `/rsw-review`): it appends new sections from a feature-local doc into the matching master doc and refuses to silently overwrite an existing heading.
-- `.rsw/scripts/validate_docs.py` runs before the merge and flags likely conflicts (same entity/endpoint name with different fields, or two Mermaid blocks defining the same entity differently) for the user to resolve by hand. Never auto-resolve a flagged conflict.
+- `.wayforge/scripts/merge_master_doc.py` enforces this mechanically at merge time (run at the end of `/wayforge-review`): it appends new sections from a feature-local doc into the matching master doc and refuses to silently overwrite an existing heading.
+- `.wayforge/scripts/validate_docs.py` runs before the merge and flags likely conflicts (same entity/endpoint name with different fields, or two Mermaid blocks defining the same entity differently) for the user to resolve by hand. Never auto-resolve a flagged conflict.
 - A Mermaid diagram block is treated as one atomic unit by both scripts — never partially merged or diffed line-by-line inside the fence.
 
 ## Feature slugs
 
 - Lowercase, hyphen-separated (`saved-searches`, not `SavedSearches` or `saved_searches`).
-- Stable once created — `/rsw-plan`, `/rsw-apply`, and `/rsw-review` all key off `workflow/features/<slug>/`. Renaming a slug after `/rsw-new-feature` has run means manually renaming the folder and re-checking every doc that references it.
+- Stable once created — `/wayforge-plan`, `/wayforge-apply`, and `/wayforge-review` all key off `workflow/features/<slug>/`. Renaming a slug after `/wayforge-new-feature` has run means manually renaming the folder and re-checking every doc that references it.
 
 ## Git strategy: {{GIT_STRATEGY}}
 
-This project uses **{{GIT_STRATEGY}}**, chosen at ``rsw init`` (or `/rsw-adopt`) time:
+This project uses **{{GIT_STRATEGY}}**, chosen at ``wayforge init`` (or `/wayforge-adopt`) time:
 
-- **mono-repo single branch** — all feature work happens on top of the default branch directly, or short-lived branches merged quickly; `/rsw-plan` does not create a dedicated long-lived branch per feature.
-- **split backend/frontend branches** — backend and frontend changes for the same feature are tracked on separate branches (e.g. `backend/saved-searches`, `frontend/saved-searches`); `/rsw-plan` creates both when the feature touches both.
-- **per-feature branches** — `/rsw-plan` creates a single `feature/<slug>` branch covering the whole feature (backend + frontend), and `/rsw-apply` commits to it.
+- **mono-repo single branch** — all feature work happens on top of the default branch directly, or short-lived branches merged quickly; `/wayforge-plan` does not create a dedicated long-lived branch per feature.
+- **split backend/frontend branches** — backend and frontend changes for the same feature are tracked on separate branches (e.g. `backend/saved-searches`, `frontend/saved-searches`); `/wayforge-plan` creates both when the feature touches both.
+- **per-feature branches** — `/wayforge-plan` creates a single `feature/<slug>` branch covering the whole feature (backend + frontend), and `/wayforge-apply` commits to it.
 
 Whichever applies to this project, treat it as fixed for the life of the project — don't mix strategies feature-to-feature. If it needs to change, that's a user decision recorded here, not something a single feature's plan should decide.
 
 ## Cross-agent handoff
 
-- `rsw init` installs the identical `/rsw-new-feature`, `/rsw-plan`, `/rsw-apply`, `/rsw-review`, and `/rsw-adopt` skills into every agent selected at init time — `.claude/skills/`, `.cursor/skills/`, and/or `.agents/skills/` (Codex). There's no separate "handoff artifact" format per agent: `implementation-plan.md` and `review.md`, both under `workflow/features/<slug>/`, are the handoff — any agent can open the project and run the next lifecycle step cold, with no memory of whichever agent ran the previous one.
-- Because the skill installed in each agent is byte-identical, don't let them drift: if a skill's own behavior needs to change project-wide, re-run `rsw init` on the affected agents to refresh them from the bundled source rather than hand-editing one agent's copy.
-- `.rsw/` (created by `rsw init`) holds the bundled doc templates (`.rsw/templates/`) and the merge/validate scripts (`.rsw/scripts/`) every skill reads from — it's implementation plumbing, not a living doc; don't hand-edit it.
+- `wayforge init` installs the identical `/wayforge-new-feature`, `/wayforge-plan`, `/wayforge-apply`, `/wayforge-review`, and `/wayforge-adopt` skills into every agent selected at init time — `.claude/skills/`, `.cursor/skills/`, and/or `.agents/skills/` (Codex). There's no separate "handoff artifact" format per agent: `implementation-plan.md` and `review.md`, both under `workflow/features/<slug>/`, are the handoff — any agent can open the project and run the next lifecycle step cold, with no memory of whichever agent ran the previous one.
+- Because the skill installed in each agent is byte-identical, don't let them drift: if a skill's own behavior needs to change project-wide, re-run `wayforge init` on the affected agents to refresh them from the bundled source rather than hand-editing one agent's copy.
+- `.wayforge/` (created by `wayforge init`) holds the bundled doc templates (`.wayforge/templates/`) and the merge/validate scripts (`.wayforge/scripts/`) every skill reads from — it's implementation plumbing, not a living doc; don't hand-edit it.
 
 ## Naming and formatting
 
 - All workflow docs are Markdown. Diagrams are embedded Mermaid fenced blocks (` ```mermaid `) inside the relevant `.md` file — never a separate `.drawio`/`.png`/standalone diagram file.
-- Headings inside `data-model.md`, `api-registry.md`, and `user-stories.md` follow the exact structure in their templates (`.rsw/templates/*.md.tmpl`) so `merge_master_doc.py` can parse section boundaries reliably. Do not freehand a different heading style in a feature-local doc.
+- Headings inside `data-model.md`, `api-registry.md`, and `user-stories.md` follow the exact structure in their templates (`.wayforge/templates/*.md.tmpl`) so `merge_master_doc.py` can parse section boundaries reliably. Do not freehand a different heading style in a feature-local doc.
