@@ -7,19 +7,19 @@ A spec-driven, multi-agent development CLI, installed the same way as [GitHub's 
 ## Install
 
 ```bash
-uv tool install wayforge-cli --from git+https://github.com/mohammedashrafdagga/realsoft-workflow.git
+uv tool install wayforge-cli --from git+https://github.com/mohammedashrafdagga/Wayforge.git
 ```
 
 Or run it once without installing:
 
 ```bash
-uvx --from git+https://github.com/mohammedashrafdagga/realsoft-workflow.git wayforge init my-project
+uvx --from git+https://github.com/mohammedashrafdagga/Wayforge.git wayforge init my-project
 ```
 
 To develop against a local checkout:
 
 ```bash
-pip install -e /path/to/realsoft-workflow
+pip install -e /path/to/Wayforge
 ```
 
 ## Usage
@@ -75,7 +75,7 @@ These are plain per-project skills, auto-discovered by each agent — no plugin/
 ## Repo layout (this CLI's own source)
 
 ```
-realsoft-workflow/
+Wayforge/
 ├── pyproject.toml                  # wayforge-cli package; entry point `wayforge`
 ├── src/wayforge_cli/
 │   ├── __init__.py                 # Typer app
