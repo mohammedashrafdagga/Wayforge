@@ -1,0 +1,4 @@
+interface:
+  display_name: "API Validation Principle"
+  short_description: "Baseline APIs, then validate affected changes"
+  default_prompt: "Use $api-validation-principle to establish or continue the API review from its last Git checkpoint and create a concise issue-focused report under docs/api_report."

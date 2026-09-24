@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clean Code Review"
+  short_description: "Baseline code quality, then review changes"
+  default_prompt: "Use $clean-code-review to establish or continue the review from its last Git checkpoint and create a concise issue-focused clean-code report."
