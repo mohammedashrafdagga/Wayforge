@@ -4,6 +4,8 @@ A spec-driven, multi-agent development CLI, installed the same way as [GitHub's 
 
 `wayforge init` does the deterministic bootstrapping — scaffolds a FastAPI/React+Vite app (or your override), creates the `workflow/` living-docs tree, and drops the identical `/wayforge-new-feature`, `/wayforge-plan`, `/wayforge-apply`, `/wayforge-review`, and `/wayforge-adopt` skills straight into whichever coding agents you choose: **Claude Code**, **Cursor**, and/or **Codex**. Because the same skill file lands in every agent, a plan written in one can be applied or reviewed from another with no separate handoff format — `workflow/features/<slug>/implementation-plan.md` and `review.md` *are* the handoff.
 
+Alongside the pipeline skills, `wayforge init` also installs a standalone set of review skills — `software-security-baseline`, `api-validation-principle`, and `clean-code-review` (ported from [coding-skills](https://github.com/mohammedashrafdagga/coding-skills)) — into the same agents. See [Review skills](#review-skills) below.
+
 ## Install
 
 ```bash
@@ -64,13 +66,25 @@ then run `/wayforge-adopt` inside your coding agent — it inspects the codebase
 
 ## Where agent skills land
 
-| Agent | Skill folder |
-|---|---|
-| Claude Code | `.claude/skills/wayforge-<name>/SKILL.md` |
-| Cursor | `.cursor/skills/wayforge-<name>/SKILL.md` |
-| Codex CLI | `.agents/skills/wayforge-<name>/SKILL.md` |
+| Agent | Pipeline skill folder | Review skill folder |
+|---|---|---|
+| Claude Code | `.claude/skills/wayforge-<name>/SKILL.md` | `.claude/skills/<name>/SKILL.md` |
+| Cursor | `.cursor/skills/wayforge-<name>/SKILL.md` | `.cursor/skills/<name>/SKILL.md` |
+| Codex CLI | `.agents/skills/wayforge-<name>/SKILL.md` | `.agents/skills/<name>/SKILL.md` |
 
 These are plain per-project skills, auto-discovered by each agent — no plugin/marketplace step. Codex's real skill-discovery folder is `.agents/`, not `.codex/`.
+
+## Review skills
+
+Three general-purpose review skills — maintained upstream at [mohammedashrafdagga/coding-skills](https://github.com/mohammedashrafdagga/coding-skills) and vendored here under `skills/` — ride along with every `wayforge init`, independent of the scope→plan→implement→review pipeline:
+
+| Skill | Purpose |
+|---|---|
+| `software-security-baseline` | Establishes a minimum practical security baseline, then reviews only changed/affected security surfaces on later revisions. Writes `security/report_NNN.md`. |
+| `api-validation-principle` | Establishes a full API baseline (routes, auth, validation, reliability), then validates changed/affected operations. Writes `docs/api_report/report_NNN.md`. |
+| `clean-code-review` | Establishes a code-quality/architecture baseline, then reviews changed/affected features for maintainability and boundary violations. Writes `docs/clean-code-report/report_NNN.md`. |
+
+Each is a full self-contained skill directory (`SKILL.md` + `references/` + `agents/`) copied as-is into every selected agent — unlike the `wayforge-*` pipeline skills, they aren't renamed or prefixed, and they aren't `wayforge init`-specific: ask any installed agent to "use `software-security-baseline` to review this app" (or the API/clean-code equivalents) and it runs, first-run building a full baseline report, later runs reviewing only what changed since the last recorded Git checkpoint.
 
 ## Repo layout (this CLI's own source)
 
@@ -93,12 +107,24 @@ Wayforge/
 │   ├── scaffold_project.sh         # FastAPI / React+Vite scaffolding
 │   ├── merge_master_doc.py         # additive-only merge into a master doc
 │   └── validate_docs.py            # pre-merge conflict guard
-└── skills/                         # canonical /wayforge-* skill bodies, installed into every selected agent
-    ├── new-feature.md
+└── skills/
+    ├── new-feature.md              # canonical /wayforge-* skill bodies, installed into every selected agent
     ├── plan.md
     ├── apply.md
     ├── review.md
-    └── adopt.md
+    ├── adopt.md
+    ├── software-security-baseline/ # standalone review skills, vendored from coding-skills and installed as-is
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   └── references/
+    ├── api-validation-principle/
+    │   ├── SKILL.md
+    │   ├── agents/openai.yaml
+    │   └── references/
+    └── clean-code-review/
+        ├── SKILL.md
+        ├── agents/openai.yaml
+        └── references/
 ```
 
 `templates/`, `scripts/`, and `skills/` are bundled into the wheel via `pyproject.toml`'s `force-include` rules, so `wayforge init` works from an installed CLI with no need for this source repo to be present.

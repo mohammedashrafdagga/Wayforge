@@ -1,0 +1,4 @@
+interface:
+  display_name: "Software Security Baseline"
+  short_description: "Baseline security, then review affected changes"
+  default_prompt: "Use $software-security-baseline to establish or continue the review from its last Git checkpoint and create a concise issue-focused security report."

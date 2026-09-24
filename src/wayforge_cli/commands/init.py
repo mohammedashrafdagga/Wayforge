@@ -25,6 +25,10 @@ AGENT_SKILL_DIRS = {
 
 SKILL_NAMES = ["new-feature", "plan", "apply", "review", "adopt"]
 
+# Standalone review skills (full directory: SKILL.md + references/ + agents/),
+# installed as-is under their own name rather than the wayforge-* pipeline naming.
+EXTRA_SKILLS = ["software-security-baseline", "api-validation-principle", "clean-code-review"]
+
 GIT_STRATEGY_LABELS = {
     "mono": "mono-repo single branch",
     "split": "split backend/frontend branches",
@@ -207,7 +211,7 @@ def init_command(
     _copy_tree(scripts_src, wayforge_dir / "scripts")
     _make_executable(wayforge_dir / "scripts")
 
-    # --- 4. Install /wayforge-* skills for each selected agent ---
+    # --- 4. Install /wayforge-* skills and the standalone review skills for each selected agent ---
     installed: dict[str, list[str]] = {}
     for agent in agents:
         agent_base = workflow_root / AGENT_SKILL_DIRS[agent]
@@ -218,6 +222,9 @@ def init_command(
             skill_dir.mkdir(parents=True, exist_ok=True)
             (skill_dir / "SKILL.md").write_text(content)
             installed[agent].append(f"wayforge-{skill}")
+        for skill in EXTRA_SKILLS:
+            _copy_tree(skills_src / skill, agent_base / skill)
+            installed[agent].append(skill)
 
     # --- 5. Report ---
     console.print()
@@ -225,7 +232,9 @@ def init_command(
     console.print(f"  workflow docs: [cyan]{workflow_dir}[/cyan]")
     console.print(f"  tooling bundle: [cyan]{wayforge_dir}[/cyan]")
     for agent, skills in installed.items():
-        skill_list = ", ".join(f"/{s}" for s in skills)
+        skill_list = ", ".join(
+            f"/{s}" if s.startswith("wayforge-") else s for s in skills
+        )
         console.print(f"  {agent}: [cyan]{workflow_root / AGENT_SKILL_DIRS[agent]}[/cyan] → {skill_list}")
 
     console.print()
